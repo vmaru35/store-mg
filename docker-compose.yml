@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo
+    container_name: mongodb
+    ports:
+      - "27018:27017"
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - app-network
+
+  app:
+    image: vmaru35/az:store-mg-v1
+    container_name: store-app
+    ports:
+      - "8090:8080"
+    depends_on:
+      - mongodb
+    networks:
+      - app-network
+    environment:
+      - spring.data.mongodb.host=mongodb
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  mongodb_data:
